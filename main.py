@@ -30,10 +30,13 @@ async def stop_counting():
 
     counter.is_running = False
     counter.capture_thread.join()
+
+    with counter.counter_lock:
+        counter.messages.clear()
+        counter.detected_ids.clear()
     return {"message": "Counting stopped."}
 
 @app.get("/line-1/status") 
 async def get_ids():
     with counter_lock:
         return {"status": list(counter.messages)}
-
